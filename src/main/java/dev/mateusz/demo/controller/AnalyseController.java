@@ -26,7 +26,6 @@ import dev.mateusz.demo.repository.DriversRepository;
 import dev.mateusz.demo.repository.RectanglesRepository;
 import dev.mateusz.demo.repository.ResultsRepository;
 import dev.mateusz.demo.view.FxmlView;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -56,6 +55,8 @@ public class AnalyseController {
 	@Lazy
 	@Autowired
 	StageManager stageManager;
+	@Autowired
+	VideoFrameExtracter videoFrameExtracter;
 
 	// logger
 	private static final Logger logger = Logger.getLogger(AnalyseController.class.getName());
@@ -160,9 +161,6 @@ public class AnalyseController {
 			// System.out.println("numer : " + MainController.MINADS);
 			stageManager.switchScene(FxmlView.HOME);
 		}
-
-		// stworzenie obiektu videoFrameExtracter
-		VideoFrameExtracter videoFrameExtracter = new VideoFrameExtracter();
 
 		// obiekt pliku z ścieżki
 		// w argumencie odwołano się do zmiennej statycznej VIDEOPATH

@@ -16,7 +16,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import dev.mateusz.demo.config.StageManager;
-import dev.mateusz.demo.domain.Analyse;
+import dev.mateusz.demo.domain.ComparativeAnalysis;
+import dev.mateusz.demo.domain.PreparationDataFromFile;
 import dev.mateusz.demo.entity.Data;
 import dev.mateusz.demo.entity.Drivers;
 import dev.mateusz.demo.entity.Fixations;
@@ -112,6 +113,12 @@ public class MainController {
 
 	@Autowired
 	DriversRepository driversRepository;
+	
+	@Autowired
+	ComparativeAnalysis comparativeAnalysis;
+	
+	@Autowired
+	PreparationDataFromFile preparationDataFromFile;
 
 	// logger
 	//private static final Logger logger = Logger.getLogger(MainController.class.getName());
@@ -297,9 +304,8 @@ public class MainController {
 				fixationsRepository.deleteDriverFixations(chooseDriver);
 				resultsRepository.deleteDriverResults(chooseDriver);
 
-				// utworzenie obiektu i wywołanie metody zwracającej zbrób danych surowych
-				Analyse analyse = new Analyse();
-				Set<Data> tempDataSet = analyse.addDataToDB(pathFile, chooseDriver);
+				// wywołanie metody zwracającej zbrób danych surowych
+				Set<Data> tempDataSet = preparationDataFromFile.addDataToDB(pathFile, chooseDriver);
 
 				// ustawienei danych dla kierowcy
 				chooseDriver.setData(tempDataSet);
@@ -520,10 +526,8 @@ public class MainController {
 				// pobranie listy Rectangles
 				rectangles = rectanglesRepository.findAll();
 
-				// stworzenie obiektu klasy Analyse i wywołanie metody
 				// "compareFramesWithRectanglesT2" analizujące podane dane
-				Analyse analyse = new Analyse();
-				List<Fixations> listFix = analyse.compareFramesWithRectanglesT2(rectangles, coordinates, chooseDriver);
+				List<Fixations> listFix = comparativeAnalysis.compareFramesWithRectangles(rectangles, coordinates, chooseDriver);
 
 				// stworzenie zbioru fixacji z listy
 				Set<Fixations> fixationsSet = new LinkedHashSet<Fixations>(listFix);
